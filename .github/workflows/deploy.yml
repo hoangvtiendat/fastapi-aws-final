@@ -26,7 +26,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # Navigate to project directory
-            cd ~/cloud-fastapi-deployment || git clone https://github.com/${{ github.repository }}.git ~/cloud-fastapi-deployment && cd ~/cloud-fastapi-deployment
+            cd ~/fastapi-aws-final || git clone https://github.com/${{ github.repository }}.git ~/fastapi-aws-final && cd ~/fastapi-aws-final
 
             # Pull latest changes
             git pull origin main
@@ -47,17 +47,5 @@ jobs:
             DEBUG=False
             EOF
 
-            # Build and run with Docker
-            docker build -t fastapi-app .
-            docker stop fastapi-app || true
-            docker rm fastapi-app || true
-            docker run -d \
-              --name fastapi-app \
-              --env-file .env \
-              -p 8000:8000 \
-              --restart unless-stopped \
-              fastapi-app
-
-            # Verify deployment
-            sleep 5
-            curl -f http://localhost:8000/health || echo "Health check failed!"
+            # Rebuild and restart containers
+	    docker compose up -d --build
