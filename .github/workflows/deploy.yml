@@ -25,13 +25,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Navigate to project directory
             cd ~/fastapi-aws-final || git clone https://github.com/${{ github.repository }}.git ~/fastapi-aws-final && cd ~/fastapi-aws-final
-
-            # Pull latest changes
             git pull origin main
-
-            # Create .env file from secrets
             cat > .env << EOF
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
@@ -46,6 +41,4 @@ jobs:
             APP_PORT=8000
             DEBUG=False
             EOF
-
-            # Rebuild and restart containers
-	    docker compose up -d --build
+            docker compose up -d --build
